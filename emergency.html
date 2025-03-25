@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergency Preparedness - Build Your Kit</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --safe: #10b981;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #f1f5f9;
+            color: var(--dark);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 0;
+            text-align: center;
+            position: relative;
+            box-shadow: var(--shadow-md);
+        }
+
+        .header-content {
+            padding: 2rem 1rem;
+        }
+
+        .header-content h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-header h2 {
+            font-size: 2.2rem;
+            color: var(--dark);
+            margin-bottom: 1rem;
+        }
+
+        .page-header p {
+            color: #64748b;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Kit Builder Section */
+        .kit-builder {
+            background: white;
+            border-radius: 12px;
+            padding: 2.5rem;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 3rem;
+        }
+
+        .location-selector {
+            margin-bottom: 2rem;
+        }
+
+        .location-selector label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .location-selector select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .location-selector select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+
+        .checklist-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .checklist-category {
+            background: #f8fafc;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .checklist-category h3 {
+            color: var(--primary-dark);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .checklist-item input[type="checkbox"] {
+            margin-right: 0.75rem;
+            margin-top: 0.25rem;
+            accent-color: var(--primary);
+        }
+
+        .checklist-item label {
+            flex: 1;
+            cursor: pointer;
+        }
+
+        .checklist-item .item-quantity {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-top: 0.25rem;
+        }
+
+        .progress-container {
+            margin: 2rem 0;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background: #e2e8f0;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 2px 5px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: #f1f5f9;
+        }
+
+        /* Recommended Products */
+        .recommended-products {
+            margin-top: 3rem;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .product-image {
+            height: 180px;
+            background: #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #94a3b8;
+        }
+
+        .product-details {
+            padding: 1.25rem;
+        }
+
+        .product-details h4 {
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+
+        .product-details p {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .product-price {
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin-bottom: 1rem;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 3rem 2rem;
+            margin-top: 4rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .checklist-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-content h1 {
+                font-size: 2rem;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>Emergency Preparedness</h1>
+            <p>Be ready for any situation with our comprehensive emergency planning tools</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="page-header">
+            <h2>Build Your Emergency Kit</h2>
+            <p>Create a customized emergency kit checklist based on your location and household needs. Check off items as you gather them to track your progress.</p>
+        </div>
+
+        <section class="kit-builder">
+            <div class="location-selector">
+                <label for="location">Select Your Location:</label>
+                <select id="location" name="location">
+                    <option value="">-- Select Location --</option>
+                    <option value="urban">Urban Area</option>
+                    <option value="suburban">Suburban Area</option>
+                    <option value="rural">Rural Area</option>
+                    <option value="coastal">Coastal Region</option>
+                    <option value="earthquake">Earthquake Zone</option>
+                    <option value="tornado">Tornado Alley</option>
+                    <option value="wildfire">Wildfire Prone Area</option>
+                </select>
+            </div>
+
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="progress-text">
+                    <span>Kit Completion: <span id="progressPercent">0</span>%</span>
+                    <span id="itemsCount">0 of 0 items</span>
+                </div>
+            </div>
+
+            <div class="checklist-container">
+                <div class="checklist-category">
+                    <h3><i class="fas fa-bottle-water"></i> Water & Food</h3>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="water1" data-category="water-food">
+                        <label for="water1">Bottled water (1 gallon per person per day)<span class="item-quantity">3-day supply</span></label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="food1" data-category="water-food">
+                        <label for="food1">Non-perishable food<span class="item-quantity">3-day supply</span></label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="food2" data-category="water-food">
+                        <label for="food2">Manual can opener</label>
+                    </div>
+                </div>
+
+                <div class="checklist-category">
+                    <h3><i class="fas fa-first-aid"></i> First Aid & Health</h3>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="firstaid1" data-category="first-aid">
+                        <label for="firstaid1">First aid kit</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="meds1" data-category="first-aid">
+                        <label for="meds1">Prescription medications<span class="item-quantity">7-day supply</span></label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="hygiene1" data-category="first-aid">
+                        <label for="hygiene1">Personal hygiene items</label>
+                    </div>
+                </div>
+
+                <div class="checklist-category">
+                    <h3><i class="fas fa-tools"></i> Tools & Supplies</h3>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="tools1" data-category="tools">
+                        <label for="tools1">Flashlight with extra batteries</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="tools2" data-category="tools">
+                        <label for="tools2">Multi-purpose tool</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="tools3" data-category="tools">
+                        <label for="tools3">Whistle</label>
+                    </div>
+                </div>
+
+                <div class="checklist-category">
+                    <h3><i class="fas fa-file-alt"></i> Documents</h3>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="docs1" data-category="documents">
+                        <label for="docs1">Copies of important documents</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="docs2" data-category="documents">
+                        <label for="docs2">Emergency contact list</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="docs3" data-category="documents">
+                        <label for="docs3">Cash in small bills</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-primary" id="saveKitBtn">Save My Kit</button>
+                <button class="btn btn-outline" id="printKitBtn">Print Checklist</button>
+            </div>
+        </section>
+
+        <section class="recommended-products">
+            <h3>Recommended Emergency Products</h3>
+            <p>These products can help you complete your emergency kit:</p>
+            
+            <div class="products-grid">
+                <div class="product-card">
+                    <div class="product-image">
+                        <i class="fas fa-battery-full fa-3x"></i>
+                    </div>
+                    <div class="product-details">
+                        <h4>Emergency Solar Radio</h4>
+                        <p>Weather radio with hand crank, solar power, and USB charging</p>
+                        <div class="product-price">$39.99</div>
+                        <button class="btn btn-outline">View Details</button>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-image">
+                        <i class="fas fa-fire-extinguisher fa-3x"></i>
+                    </div>
+                    <div class="product-details">
+                        <h4>First Aid Kit (200 pieces)</h4>
+                        <p>Comprehensive first aid kit for families</p>
+                        <div class="product-price">$29.95</div>
+                        <button class="btn btn-outline">View Details</button>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-image">
+                        <i class="fas fa-campground fa-3x"></i>
+                    </div>
+                    <div class="product-details">
+                        <h4>Emergency Survival Blanket</h4>
+                        <p>Pack of 4 thermal blankets for warmth in emergencies</p>
+                        <div class="product-price">$12.99</div>
+                        <button class="btn btn-outline">View Details</button>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-image">
+                        <i class="fas fa-water fa-3x"></i>
+                    </div>
+                    <div class="product-details">
+                        <h4>Water Purification Tablets</h4>
+                        <p>50 tablets - purifies 25 gallons of water</p>
+                        <div class="product-price">$8.49</div>
+                        <button class="btn btn-outline">View Details</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2025 Emergency Preparedness Initiative. All rights reserved.</p>
+        <p>Stay safe and be prepared for any emergency situation.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Update progress bar as items are checked
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            const progressFill = document.getElementById('progressFill');
+            const progressPercent = document.getElementById('progressPercent');
+            const itemsCount = document.getElementById('itemsCount');
+            const totalItems = checkboxes.length;
+            
+            itemsCount.textContent = `0 of ${totalItems} items`;
+            
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updateProgress);
+            });
+            
+            function updateProgress() {
+                const checkedItems = document.querySelectorAll('input[type="checkbox"]:checked').length;
+                const percentage = Math.round((checkedItems / totalItems) * 100);
+                
+                progressFill.style.width = `${percentage}%`;
+                progressPercent.textContent = percentage;
+                itemsCount.textContent = `${checkedItems} of ${totalItems} items`;
+            }
+            
+            // Location selector change
+            const locationSelect = document.getElementById('location');
+            locationSelect.addEventListener('change', function() {
+                // In a real app, this would fetch location-specific checklist items
+                alert(`Loading checklist recommendations for ${this.options[this.selectedIndex].text}`);
+            });
+            
+            // Button event handlers
+            document.getElementById('saveKitBtn').addEventListener('click', function() {
+                alert('Your emergency kit has been saved!');
+            });
+            
+            document.getElementById('printKitBtn').addEventListener('click', function() {
+                window.print();
+            });
+        });
+    </script>
+</body>
+</html>

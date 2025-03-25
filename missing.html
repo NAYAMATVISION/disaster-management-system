@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Missing Persons | Disaster Recovery Network</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #e74c3c;
+            --accent: #3498db;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --success: #27ae60;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+        
+        .emergency-banner {
+            background-color: var(--secondary);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            margin-bottom: 30px;
+            border-radius: 5px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 0.9; }
+            50% { opacity: 1; }
+            100% { opacity: 0.9; }
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #ddd;
+        }
+        
+        .tab {
+            padding: 12px 25px;
+            cursor: pointer;
+            font-weight: bold;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .tab.active {
+            border-bottom: 3px solid var(--accent);
+            color: var(--accent);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .search-section {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+        
+        .search-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        .btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: var(--secondary);
+        }
+        
+        .btn-secondary:hover {
+            background: #c0392b;
+        }
+        
+        .missing-persons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        
+        .person-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+        }
+        
+        .person-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .person-image {
+            height: 250px;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .person-details {
+            padding: 20px;
+        }
+        
+        .person-name {
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+            color: var(--primary);
+        }
+        
+        .person-meta {
+            color: #666;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+        }
+        
+        .last-seen {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-size: 0.9rem;
+        }
+        
+        .sighting-btn {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            background: var(--success);
+            color: white;
+            padding: 8px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .volunteer-opportunities {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        
+        .volunteer-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .volunteer-title {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+        
+        .volunteer-location {
+            color: var(--accent);
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        
+        .volunteer-skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 15px 0;
+        }
+        
+        .skill-tag {
+            background: #e0f7fa;
+            color: #00838f;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background: white;
+            width: 90%;
+            max-width: 600px;
+            border-radius: 8px;
+            overflow: hidden;
+            animation: modalFadeIn 0.3s ease;
+        }
+        
+        @keyframes modalFadeIn {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .modal-header {
+            background: var(--primary);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .modal-body {
+            padding: 20px;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+            gap: 10px;
+        }
+        
+        .page-btn {
+            padding: 8px 15px;
+            border: 1px solid #ddd;
+            background: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        
+        .page-btn.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+        
+        @media (max-width: 768px) {
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .tab {
+                border-bottom: none;
+                border-left: 3px solid transparent;
+            }
+            
+            .tab.active {
+                border-bottom: none;
+                border-left: 3px solid var(--accent);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1><i class="fas fa-search-location"></i> Missing Persons Registry</h1>
+            <p>Help reunite families affected by disasters</p>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="emergency-banner">
+            <i class="fas fa-bullhorn"></i> CRITICAL: 127 people still missing after recent floods. Any information helps.
+        </div>
+        
+        <div class="tabs">
+            <div class="tab active" data-tab="missing">Search Missing Persons</div>
+            <div class="tab" data-tab="report">Report a Missing Person</div>
+            <div class="tab" data-tab="volunteer">Volunteer Assistance</div>
+        </div>
+        
+        <!-- Missing Persons Tab -->
+        <div class="tab-content active" id="missing">
+            <div class="search-section">
+                <h2>Search Missing Persons Database</h2>
+                <form class="search-form">
+                    <div class="form-group">
+                        <label for="search-name">Name</label>
+                        <input type="text" id="search-name" placeholder="Enter full or partial name">
+                    </div>
+                    <div class="form-group">
+                        <label for="search-location">Last Known Location</label>
+                        <input type="text" id="search-location" placeholder="City, region or disaster area">
+                    </div>
+                    <div class="form-group">
+                        <label for="search-age">Age Range</label>
+                        <select id="search-age">
+                            <option value="">Any age</option>
+                            <option value="0-12">Child (0-12)</option>
+                            <option value="13-17">Teen (13-17)</option>
+                            <option value="18-59">Adult (18-59)</option>
+                            <option value="60+">Senior (60+)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>&nbsp;</label>
+                        <button type="submit" class="btn">Search</button>
+                    </div>
+                </form>
+            </div>
+            
+            <h2>Recently Reported Missing Persons</h2>
+            <div class="missing-persons-grid" id="missing-persons-list">
+                <!-- Sample person cards - these would be dynamically generated in a real app -->
+                <div class="person-card">
+                    <div class="person-image" style="background-image: url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80');"></div>
+                    <div class="person-details">
+                        <h3 class="person-name">Pawan Kumar</h3>
+                        <div class="person-meta">32 years old • 5'9" • Hispanic male</div>
+                        <div class="last-seen">
+                            <strong>Last seen:</strong> July 15, 2024 near Cedar Creek flood zone
+                        </div>
+                        <p>Wearing blue jeans and red t-shirt. Has tattoo of eagle on right forearm.</p>
+                        <a href="#" class="sighting-btn" data-person="David Rodriguez">Report Sighting</a>
+                    </div>
+                </div>
+                
+                <div class="person-card">
+                    <div class="person-image" style="background-image: url('https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');"></div>
+                    <div class="person-details">
+                        <h3 class="person-name">Sarah Kapoor</h3>
+                        <div class="person-meta">28 years old • 5'4" • Asian female</div>
+                        <div class="last-seen">
+                            <strong>Last seen:</strong> July 14, 2024 at Mumbai filmcity, India.
+                        </div>
+                        <p>Carrying a pink backpack. Has asthma and may need medication.</p>
+                        <a href="#" class="sighting-btn" data-person="Sarah Chen">Report Sighting</a>
+                    </div>
+                </div>
+                
+                <div class="person-card">
+                    <div class="person-image" style="background-image: url('https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80');"></div>
+                    <div class="person-details">
+                        <h3 class="person-name">Sukritti Singh</h3>
+                        <div class="person-meta">45 years old • 5'6" • Brown female</div>
+                        <div class="last-seen">
+                            <strong>Last seen:</strong> July 16, 2024 near Allen institute,Mohalli
+                        </div>
+                        <p>Wearing purple dress. Has a service dog named Woofy (Pamerian).</p>
+                        <a href="#" class="sighting-btn" data-person="Emily Johnson">Report Sighting</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="pagination">
+                <button class="page-btn active">1</button>
+                <button class="page-btn">2</button>
+                <button class="page-btn">3</button>
+                <button class="page-btn">Next →</button>
+            </div>
+        </div>
+        
+        <!-- Report Missing Person Tab -->
+        <div class="tab-content" id="report">
+            <div class="search-section">
+                <h2>Report a Missing Person</h2>
+                <form id="report-form">
+                    <div class="form-group">
+                        <label for="missing-name">Full Name</label>
+                        <input type="text" id="missing-name" required>
+                    </div>
+                    
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label for="missing-age">Age</label>
+                            <input type="number" id="missing-age" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="missing-gender">Gender</label>
+                            <select id="missing-gender" required>
+                                <option value="">Select</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="missing-location">Last Known Location</label>
+                        <input type="text" id="missing-location" placeholder="Address, city or landmark" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="missing-date">Date Last Seen</label>
+                        <input type="date" id="missing-date" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="missing-description">Physical Description</label>
+                        <textarea id="missing-description" rows="3" placeholder="Height, weight, hair color, distinctive features, clothing last seen wearing..." required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="missing-notes">Additional Information</label>
+                        <textarea id="missing-notes" rows="2" placeholder="Medical conditions, special needs, possible destinations..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="missing-photo">Upload Photo</label>
+                        <input type="file" id="missing-photo" accept="image/*">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="reporter-name">Your Name</label>
+                        <input type="text" id="reporter-name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="reporter-contact">Your Contact Information</label>
+                        <input type="text" id="reporter-contact" placeholder="Phone and/or email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="reporter-relation">Your Relationship to Missing Person</label>
+                        <input type="text" id="reporter-relation" required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-secondary">Submit Report</button>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Volunteer Assistance Tab -->
+        <div class="tab-content" id="volunteer">
+            <div class="search-section">
+                <h2>Volunteer to Help Affected Families</h2>
+                <p>Your time and skills can make a tremendous difference for families searching for loved ones.</p>
+                
+                <div class="volunteer-opportunities">
+                    <div class="volunteer-card">
+                        <h3 class="volunteer-title">Search & Rescue Support</h3>
+                        <div class="volunteer-location">Cedar Creek Disaster Zone</div>
+                        <p>Assist professional teams with ground searches in affected areas. Training will be provided.</p>
+                        <div class="volunteer-skills">
+                            <span class="skill-tag">Physical fitness</span>
+                            <span class="skill-tag">First aid</span>
+                            <span class="skill-tag">Outdoor skills</span>
+                        </div>
+                        <button class="btn volunteer-btn" data-role="Search & Rescue">Volunteer</button>
+                    </div>
+                    
+                    <div class="volunteer-card">
+                        <h3 class="volunteer-title">Family Support Volunteer</h3>
+                        <div class="volunteer-location">Maplewood Relief Center</div>
+                        <p>Provide emotional support and practical assistance to families waiting for news.</p>
+                        <div class="volunteer-skills">
+                            <span class="skill-tag">Counseling</span>
+                            <span class="skill-tag">Communication</span>
+                            <span class="skill-tag">Patience</span>
+                        </div>
+                        <button class="btn volunteer-btn" data-role="Family Support">Volunteer</button>
+                    </div>
+                    
+                    <div class="volunteer-card">
+                        <h3 class="volunteer-title">Information Coordinator</h3>
+                        <div class="volunteer-location">Virtual/Remote</div>
+                        <p>Help manage incoming information and match reports with missing persons cases.</p>
+                        <div class="volunteer-skills">
+                            <span class="skill-tag">Organization</span>
+                            <span class="skill-tag">Data entry</span>
+                            <span class="skill-tag">Detail-oriented</span>
+                        </div>
+                        <button class="btn volunteer-btn" data-role="Information Coordinator">Volunteer</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="search-section" style="margin-top: 30px;">
+                <h2>Register as a Volunteer</h2>
+                <form id="volunteer-form">
+                    <div class="form-group">
+                        <label for="vol-name">Full Name</label>
+                        <input type="text" id="vol-name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="vol-email">Email</label>
+                        <input type="email" id="vol-email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="vol-phone">Phone Number</label>
+                        <input type="tel" id="vol-phone" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="vol-location">Your Location</label>
+                        <input type="text" id="vol-location" placeholder="City and state" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="vol-skills">Skills & Qualifications</label>
+                        <textarea id="vol-skills" rows="3" placeholder="First aid, counseling, languages spoken, search experience..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="vol-availability">Availability</label>
+                        <select id="vol-availability" required>
+                            <option value="">Select</option>
+                            <option value="full">Full-time (40+ hrs/week)</option>
+                            <option value="part">Part-time (10-30 hrs/week)</option>
+                            <option value="flexible">Flexible hours</option>
+                            <option value="weekends">Weekends only</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="vol-interests">Areas of Interest</label>
+                        <select id="vol-interests" multiple size="4">
+                            <option value="search">Search & Rescue</option>
+                            <option value="support">Family Support</option>
+                            <option value="admin">Administrative Help</option>
+                            <option value="medical">Medical Assistance</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="btn">Submit Volunteer Application</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Sighting Report Modal -->
+    <div class="modal" id="sighting-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Report Sighting of <span id="modal-person-name"></span></h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="sighting-form">
+                    <div class="form-group">
+                        <label for="sighting-date">Date of Sighting</label>
+                        <input type="date" id="sighting-date" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="sighting-location">Exact Location</label>
+                        <input type="text" id="sighting-location" placeholder="Address, city, or coordinates" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="sighting-details">Details of Sighting</label>
+                        <textarea id="sighting-details" rows="4" required placeholder="What was the person doing? Who were they with? Condition/appearance..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="sighting-contact">Your Contact Information</label>
+                        <input type="text" id="sighting-contact" placeholder="Phone/email (will be shared with family)" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="sighting-photo">Upload Photo/Video (if available)</label>
+                        <input type="file" id="sighting-photo" accept="image/*,video/*">
+                    </div>
+                    
+                    <button type="submit" class="btn">Submit Sighting Report</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Volunteer Modal -->
+    <div class="modal" id="volunteer-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Apply for: <span id="modal-role-name"></span></h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="specific-volunteer-form">
+                    <div id="role-description">
+                        <!-- Filled by JavaScript -->
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="vol-specific-name">Full Name</label>
+                        <input type="text" id="vol-specific-name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="vol-specific-email">Email</label>
+                        <input type="email" id="vol-specific-email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="vol-specific-phone">Phone Number</label>
+                        <input type="tel" id="vol-specific-phone" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Are you available for immediate deployment?</label>
+                        <div>
+                            <input type="radio" id="vol-immediate-yes" name="immediate" value="yes">
+                            <label for="vol-immediate-yes" style="display: inline;">Yes</label>
+                            
+                            <input type="radio" id="vol-immediate-no" name="immediate" value="no" checked>
+                            <label for="vol-immediate-no" style="display: inline;">No</label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="vol-specific-experience">Relevant Experience</label>
+                        <textarea id="vol-specific-experience" rows="3" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="vol-specific-notes">Additional Information</label>
+                        <textarea id="vol-specific-notes" rows="2"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn">Submit Application</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Tab functionality
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Remove active class from all tabs and contents
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                // Add active class to clicked tab and corresponding content
+                tab.classList.add('active');
+                const tabId = tab.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+        
+        // Sighting report modal
+        const sightingModal = document.getElementById('sighting-modal');
+        document.querySelectorAll('.sighting-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const personName = btn.getAttribute('data-person');
+                document.getElementById('modal-person-name').textContent = personName;
+                sightingModal.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            });
+        });
+        
+        // Volunteer modal
+        const volunteerModal = document.getElementById('volunteer-modal');
+        document.querySelectorAll('.volunteer-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const role = btn.getAttribute('data-role');
+                document.getElementById('modal-role-name').textContent = role;
+                
+                // In a real app, you'd fetch role details from a database
+                let description = '';
+                if (role === 'Search & Rescue') {
+                    description = `
+                        <p><strong>Search & Rescue Volunteers</strong> work alongside professional teams to locate missing persons in disaster areas.</p>
+                        <p>Requirements:</p>
+                        <ul>
+                            <li>Moderate physical fitness</li>
+                            <li>Ability to follow safety protocols</li>
+                            <li>Willingness to work in difficult conditions</li>
+                            <li>Training will be provided on-site</li>
+                        </ul>
+                    `;
+                } else if (role === 'Family Support') {
+                    description = `
+                        <p><strong>Family Support Volunteers</strong> provide emotional support and practical assistance to families waiting for news about missing loved ones.</p>
+                        <p>Requirements:</p>
+                        <ul>
+                            <li>Compassionate and patient demeanor</li>
+                            <li>Good listening skills</li>
+                            <li>Ability to maintain confidentiality</li>
+                            <li>Training in crisis counseling is a plus</li>
+                        </ul>
+                    `;
+                }
+                
+                document.getElementById('role-description').innerHTML = description;
+                volunteerModal.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            });
+        });
+        
+        // Close modals
+        document.querySelectorAll('.close-modal').forEach(btn => {
+            btn.addEventListener('click', () => {
+                sightingModal.style.display = 'none';
+                volunteerModal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            });
+        });
+        
+        // Close modal when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target === sightingModal) {
+                sightingModal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+            if (e.target === volunteerModal) {
+                volunteerModal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        });
+        
+        // Form submissions
+        document.getElementById('report-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Missing person report submitted. Our team will contact you shortly.');
+            // In a real app, you would send this data to your server
+            e.target.reset();
+        });
+        
+        document.getElementById('volunteer-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Thank you for your volunteer application! We will contact you with next steps.');
+            // In a real app, you would send this data to your server
+            e.target.reset();
+        });
+        
+        document.getElementById('sighting-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Thank you for reporting this sighting. This information could be crucial to reuniting a family.');
+            // In a real app, you would send this data to your server
+            e.target.reset();
+            sightingModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        });
+        
+        document.getElementById('specific-volunteer-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Application submitted for ' + document.getElementById('modal-role-name').textContent);
+            // In a real app, you would send this data to your server
+            e.target.reset();
+            volunteerModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        });
+        
+        // Simulate loading more missing persons (in a real app, this would be an API call)
+        document.querySelectorAll('.page-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                if (btn.textContent !== 'Next →') {
+                    document.querySelectorAll('.page-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                }
+                // Here you would load the appropriate page of results
+            });
+        });
+    </script>
+</body>
+</html>

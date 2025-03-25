@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergency Contacts | Disaster Relief Network</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #e74c3c;
+            --accent: #3498db;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --success: #27ae60;
+            --warning: #f39c12;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .emergency-alert {
+            background-color: var(--secondary);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+            margin-bottom: 20px;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 0.9; }
+            50% { opacity: 1; }
+            100% { opacity: 0.9; }
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+        
+        .search-section {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+        
+        .search-container {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        #location-search {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        .search-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 0 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .search-btn:hover {
+            background: #2980b9;
+        }
+        
+        .filter-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .filter-tag {
+            background: var(--light);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .filter-tag.active {
+            background: var(--accent);
+            color: white;
+        }
+        
+        .filter-tag.medical { border-left: 4px solid #e74c3c; }
+        .filter-tag.rescue { border-left: 4px solid #f39c12; }
+        .filter-tag.shelter { border-left: 4px solid #3498db; }
+        .filter-tag.utility { border-left: 4px solid #2ecc71; }
+        .filter-tag.govt { border-left: 4px solid #9b59b6; }
+        
+        .quick-call {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .quick-call-item {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+            border-top: 4px solid var(--accent);
+            position: relative;
+        }
+        
+        .quick-call-item.medical { border-top-color: #e74c3c; }
+        .quick-call-item.rescue { border-top-color: #f39c12; }
+        .quick-call-item.shelter { border-top-color: #3498db; }
+        .quick-call-item.utility { border-top-color: #2ecc71; }
+        .quick-call-item.govt { border-top-color: #9b59b6; }
+        
+        .quick-call-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .quick-call-item h3 {
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+        
+        .contact-number {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin: 15px 0;
+            color: var(--dark);
+        }
+        
+        .call-btn {
+            display: inline-block;
+            background: var(--success);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .call-btn:hover {
+            background: #219653;
+            transform: translateY(-2px);
+        }
+        
+        .category-section {
+            margin-bottom: 40px;
+        }
+        
+        .category-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eee;
+        }
+        
+        .category-title {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+        
+        .contacts-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .contacts-table th {
+            background: var(--primary);
+            color: white;
+            padding: 15px;
+            text-align: left;
+        }
+        
+        .contacts-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .contacts-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .contacts-table tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .contact-type {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            background: #eee;
+        }
+        
+        .type-medical { background: #ffebee; color: #e74c3c; }
+        .type-rescue { background: #fff3e0; color: #f39c12; }
+        .type-shelter { background: #e3f2fd; color: #3498db; }
+        .type-utility { background: #e8f5e9; color: #2ecc71; }
+        .type-govt { background: #f3e5f5; color: #9b59b6; }
+        
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .save-card {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            margin-top: 40px;
+        }
+        
+        .save-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+        
+        .download-btn {
+            display: inline-block;
+            background: var(--accent);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            margin-right: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .download-btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+        
+        .download-btn i {
+            margin-right: 8px;
+        }
+        
+        @media (max-width: 768px) {
+            .search-container {
+                flex-direction: column;
+            }
+            
+            .quick-call {
+                grid-template-columns: 1fr;
+            }
+            
+            .contacts-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1><i class="fas fa-phone-alt"></i> Emergency Contacts</h1>
+            <p>Immediate help numbers for disaster-affected areas</p>
+        </div>
+    </header>
+    
+    <div class="emergency-alert">
+        <i class="fas fa-exclamation-triangle"></i> For immediate life-threatening emergencies, call your local emergency number first!
+    </div>
+    
+    <div class="container">
+        <div class="search-section">
+            <h2>Find Emergency Services Near You</h2>
+            <div class="search-container">
+                <input type="text" id="location-search" placeholder="Enter your city, state, or disaster area">
+                <button class="search-btn">Search</button>
+            </div>
+            
+            <div class="filter-tags">
+                <div class="filter-tag medical active" data-type="medical">Medical</div>
+                <div class="filter-tag rescue active" data-type="rescue">Rescue</div>
+                <div class="filter-tag shelter active" data-type="shelter">Shelter</div>
+                <div class="filter-tag utility active" data-type="utility">Utilities</div>
+                <div class="filter-tag govt active" data-type="govt">Government</div>
+            </div>
+        </div>
+        
+        <h2>Quick Call</h2>
+        <p>Most frequently needed emergency numbers:</p>
+        
+        <div class="quick-call" id="quick-call-container">
+            <!-- Quick call items will be populated by JavaScript -->
+        </div>
+        
+        <div class="category-section" id="medical-contacts">
+            <div class="category-header">
+                <h3 class="category-title"><i class="fas fa-hospital"></i> Medical Emergency Contacts</h3>
+            </div>
+            
+            <div class="table-responsive">
+                <table class="contacts-table">
+                    <thead>
+                        <tr>
+                            <th>Service</th>
+                            <th>Contact Number</th>
+                            <th>Availability</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Emergency Medical Services (Ambulance)</td>
+                            <td class="contact-number">108 / 112</td>
+                            <td>24/7</td>
+                            <td><a href="tel:108" class="call-btn">Call Now</a></td>
+                        </tr>
+                        <tr>
+                            <td>Disaster Medical Assistance</td>
+                            <td class="contact-number">1-800-123-4567</td>
+                            <td>24/7 during disasters</td>
+                            <td><a href="tel:18001234567" class="call-btn">Call Now</a></td>
+                        </tr>
+                        <tr>
+                            <td>Poison Control Center</td>
+                            <td class="contact-number">1-800-222-1222</td>
+                            <td>24/7</td>
+                            <td><a href="tel:18002221222" class="call-btn">Call Now</a></td>
+                        </tr>
+                        <tr>
+                            <td>Mental Health Crisis Hotline</td>
+                            <td class="contact-number">1-800-273-TALK (8255)</td>
+                            <td>24/7</td>
+                            <td><a href="tel:18002738255" class="call-btn">Call Now</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div class="category-section" id="rescue-contacts">
+            <div class="category-header">
+                <h3 class="category-title"><i class="fas fa-life-ring"></i> Search & Rescue Contacts</h3>
+            </div>
+            
+            <div class="table-responsive">
+                <table class="contacts-table">
+                    <thead>
+                        <tr>
+                            <th>Service</th>
+                            <th>Contact Number</th>
+                            <th>Availability</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>National Disaster Response Force (NDRF)</td>
+                            <td class="contact-number">011-24363260</td>
+                            <td>24/7</td>
+                            <td><a href="tel:01124363260" class="call-btn">Call Now</a></td>
+                        </tr>
+                        <tr>
+                            <td>Fire & Rescue Services</td>
+                            <td class="contact-number">101</td>
+                            <td>24/7</td>
+                            <td><a href="tel:101" class="call-btn">Call Now</a></td>
+                        </tr>
+                        <tr>
+                            <td>Coast Guard Emergency</td>
+                            <td class="contact-number">1554</td>
+                            <td>24/7</td>
+                            <td><a href="tel:1554" class="call-btn">Call Now</a></td>
+                        </tr>
+                        <tr>
+                            <td>Mountain Rescue</td>
+                            <td class="contact-number">1-800-123-4567</td>
+                            <td>24/7</td>
+                            <td><a href="tel:18001234567" class="call-btn">Call Now</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div class="category-section" id="shelter-contacts">
+            <div class="category-header">
+                <h3 class="category-title"><i class="fas fa-home"></i> Shelter & Relief Contacts</h3>
+            </div>
+            
+            <div class="table-responsive">
+                <table class="contacts-table">
+                    <thead>
+                        <tr>
+                            <th>Service</th>
+                            <th>Contact Number</th>
+                            <th>Availability</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Red Cross Disaster Relief</td>
+                            <td class="contact-number">1-800-RED-CROSS (733-2767)</td>
+                            <td>24/7 during disasters</td>
+                            <td><a href="tel:18007332767" class="call-btn">Call Now</a></td>
+                        </tr>
+                        <tr>
+                            <td>Emergency Shelter Hotline</td>
+                            <td class="contact-number">1-800-123-4567</td>
+                            <td>24/7 during disasters</td>
+                            <td><a href="tel:18001234567" class="call-btn">Call Now</a></td>
+                        </tr>
+                        <tr>
+                            <td>Disaster Food Assistance</td>
+                            <td class="contact-number">1-800-123-4567</td>
+                            <td>8am-8pm during disasters</td>
+                            <td><a href="tel:18001234567" class="call-btn">Call Now</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div class="save-card">
+            <h3 class="save-title">Save These Contacts</h3>
+            <p>Download emergency contact lists for offline access:</p>
+            
+            <a href="#" class="download-btn" id="download-pdf"><i class="fas fa-file-pdf"></i> Download PDF</a>
+            <a href="#" class="download-btn" id="download-vcf"><i class="fas fa-address-card"></i> Download vCard</a>
+            <a href="#" class="download-btn" id="download-image"><i class="fas fa-image"></i> Download Image</a>
+            
+            <div style="margin-top: 20px;">
+                <p><strong>Text these numbers to yourself:</strong></p>
+                <input type="tel" id="user-phone" placeholder="Your phone number" style="padding: 10px; width: 250px; margin-right: 10px;">
+                <button class="call-btn" id="send-sms">Send to My Phone</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Sample data for emergency contacts (in a real app, this would come from a database)
+        const emergencyContacts = {
+            quickCall: [
+                {
+                    name: "Emergency Services",
+                    number: "112 / 911",
+                    type: "rescue",
+                    description: "Police, Fire, Medical"
+                },
+                {
+                    name: "Disaster Medical Assistance",
+                    number: "1-800-123-4567",
+                    type: "medical",
+                    description: "24/7 during disasters"
+                },
+                {
+                    name: "Red Cross Disaster Relief",
+                    number: "1-800-RED-CROSS",
+                    type: "shelter",
+                    description: "Shelter and basic needs"
+                },
+                {
+                    name: "Power Outage Hotline",
+                    number: "1-800-123-4567",
+                    type: "utility",
+                    description: "Report electrical emergencies"
+                },
+                {
+                    name: "FEMA Disaster Assistance",
+                    number: "1-800-621-FEMA",
+                    type: "govt",
+                    description: "Federal emergency management"
+                }
+            ],
+            locations: {
+                "florida": {
+                    quickCall: [
+                        {
+                            name: "Florida Hurricane Hotline",
+                            number: "1-800-123-4567",
+                            type: "rescue",
+                            description: "State emergency management"
+                        },
+                        // More location-specific contacts...
+                    ]
+                },
+                "california": {
+                    quickCall: [
+                        {
+                            name: "California Wildfire Response",
+                            number: "1-800-123-4567",
+                            type: "rescue",
+                            description: "Wildfire evacuation info"
+                        },
+                        // More location-specific contacts...
+                    ]
+                }
+            }
+        };
+        
+        // Render quick call items
+        function renderQuickCall(contacts) {
+            const container = document.getElementById('quick-call-container');
+            container.innerHTML = '';
+            
+            contacts.forEach(contact => {
+                const typeClass = contact.type.toLowerCase();
+                
+                const item = document.createElement('div');
+                item.className = `quick-call-item ${typeClass}`;
+                item.innerHTML = `
+                    <h3>${contact.name}</h3>
+                    <p>${contact.description}</p>
+                    <div class="contact-number">${contact.number}</div>
+                    <a href="tel:${contact.number.replace(/[^0-9]/g, '')}" class="call-btn">
+                        <i class="fas fa-phone"></i> Call Now
+                    </a>
+                `;
+                
+                container.appendChild(item);
+            });
+        }
+        
+        // Filter contacts by type
+        function filterContacts() {
+            const activeTypes = [];
+            document.querySelectorAll('.filter-tag.active').forEach(tag => {
+                activeTypes.push(tag.getAttribute('data-type'));
+            });
+            
+            const filteredContacts = emergencyContacts.quickCall.filter(contact => 
+                activeTypes.includes(contact.type)
+            );
+            
+            renderQuickCall(filteredContacts);
+        }
+        
+        // Search by location
+        function searchLocation(location) {
+            if (emergencyContacts.locations[location.toLowerCase()]) {
+                // In a real app, you would fetch location-specific contacts from your database
+                const locationContacts = emergencyContacts.locations[location.toLowerCase()].quickCall;
+                renderQuickCall(locationContacts);
+            } else {
+                // Default to all contacts if location not found
+                renderQuickCall(emergencyContacts.quickCall);
+                alert('Location not found. Showing general emergency contacts.');
+            }
+        }
+        
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', () => {
+            // Render initial quick call items
+            renderQuickCall(emergencyContacts.quickCall);
+            
+            // Filter tag click event
+            document.querySelectorAll('.filter-tag').forEach(tag => {
+                tag.addEventListener('click', () => {
+                    tag.classList.toggle('active');
+                    filterContacts();
+                });
+            });
+            
+            // Search button click event
+            document.querySelector('.search-btn').addEventListener('click', () => {
+                const location = document.getElementById('location-search').value.trim();
+                if (location) {
+                    searchLocation(location);
+                }
+            });
+            
+            // Download buttons
+            document.getElementById('download-pdf').addEventListener('click', (e) => {
+                e.preventDefault();
+                alert('PDF download would start here. In a real app, generate a PDF with all contacts.');
+            });
+            
+            document.getElementById('download-vcf').addEventListener('click', (e) => {
+                e.preventDefault();
+                alert('vCard file would download here. In a real app, generate a vCard with all contacts.');
+            });
+            
+            document.getElementById('download-image').addEventListener('click', (e) => {
+                e.preventDefault();
+                alert('Image would download here. In a real app, generate an image with key contacts.');
+            });
+            
+            // SMS sending functionality
+            document.getElementById('send-sms').addEventListener('click', () => {
+                const phoneNumber = document.getElementById('user-phone').value.trim();
+                if (phoneNumber) {
+                    alert(`In a real app, this would send key contacts to ${phoneNumber} via SMS.`);
+                } else {
+                    alert('Please enter your phone number.');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

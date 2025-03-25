@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en-IN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>India Emergency Evacuation Routes</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --saffron: #FF9933;
+            --green: #138808;
+            --blue: #000080;
+            --danger: #DC2626;
+            --light-bg: #F8FAFC;
+            --text-dark: #1E293B;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', 'Noto Sans Devanagari', sans-serif;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        /* Header with Indian theme */
+        header {
+            background: linear-gradient(135deg, var(--blue), var(--saffron));
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 10px;
+            background: var(--green);
+        }
+
+        .header-content h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Main container */
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        /* Map placeholder */
+        .map-placeholder {
+            height: 500px;
+            background: linear-gradient(145deg, #E2E8F0, #CBD5E1);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: var(--blue);
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .map-placeholder i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            color: var(--saffron);
+        }
+
+        .map-placeholder::before {
+            content: "Interactive Map Will Appear Here";
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        /* Route options */
+        .route-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .option-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            cursor: pointer;
+        }
+
+        .option-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+            border-color: var(--saffron);
+        }
+
+        .option-card i {
+            font-size: 2.5rem;
+            color: var(--blue);
+            margin-bottom: 1rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: var(--blue);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            margin-top: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background: var(--saffron);
+            transform: translateY(-2px);
+        }
+
+        /* Emergency resources */
+        .emergency-resources {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 3rem;
+        }
+
+        .emergency-resources h2 {
+            color: var(--blue);
+            margin-bottom: 1.5rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .emergency-resources h2::after {
+            content: "";
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--saffron);
+            border-radius: 2px;
+        }
+
+        .resource-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .resource-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--light-bg);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .resource-item:hover {
+            background: #E2E8F0;
+        }
+
+        .resource-item i {
+            font-size: 1.5rem;
+            color: var(--danger);
+        }
+
+        /* Emergency numbers */
+        .emergency-numbers {
+            background: var(--danger);
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .emergency-numbers h2 {
+            margin-bottom: 1.5rem;
+        }
+
+        .numbers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .number-item {
+            background: rgba(255,255,255,0.1);
+            padding: 1rem;
+            border-radius: 8px;
+        }
+                
+        /* New Footer Styles */
+        footer {
+            background: var(--blue);
+            color: white;
+            padding: 3rem 1rem;
+            margin-top: 3rem;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .footer-logo span {
+            color: var(--saffron);
+        }
+
+        .footer-about p {
+            margin-bottom: 1rem;
+            opacity: 0.9;
+        }
+
+        .footer-links h3, 
+        .footer-contact h3 {
+            color: var(--saffron);
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .footer-links h3::after,
+        .footer-contact h3::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--green);
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: block;
+            padding: 0.3rem 0;
+        }
+
+        .footer-links a:hover {
+            color: var(--saffron);
+            transform: translateX(5px);
+        }
+
+        .footer-contact p {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.8rem;
+        }
+
+        .footer-contact i {
+            color: var(--saffron);
+            margin-top: 0.2rem;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .footer-social a {
+            color: white;
+            background: rgba(255,255,255,0.1);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .footer-social a:hover {
+            background: var(--saffron);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Footer */
+        @media (max-width: 768px) {
+            .footer-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-links h3,
+            .footer-contact h3 {
+                margin-top: 1.5rem;
+            }
+        }
+
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content h1 {
+                font-size: 2rem;
+            }
+            
+            .map-placeholder {
+                height: 400px;
+            }
+            
+            .map-placeholder::before {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>भारत आपातकालीन निकासी मार्ग</h1>
+            <p>Know your evacuation routes for emergencies in India</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="map-placeholder">
+            <i class="fas fa-map-marked-alt"></i>
+        </div>
+
+        <div class="route-options">
+            <div class="option-card">
+                <i class="fas fa-home"></i>
+                <h3>From Home</h3>
+                <button class="btn">View Routes</button>
+            </div>
+            
+            <div class="option-card">
+                <i class="fas fa-briefcase"></i>
+                <h3>From Work</h3>
+                <button class="btn">View Routes</button>
+            </div>
+            
+            <div class="option-card">
+                <i class="fas fa-map-marker-alt"></i>
+                <h3>Custom Location</h3>
+                <button class="btn">Set Location</button>
+            </div>
+        </div>
+
+        <div class="emergency-resources">
+            <h2>Emergency Resources Near You</h2>
+            <div class="resource-grid">
+                <div class="resource-item">
+                    <i class="fas fa-hospital"></i>
+                    <div>
+                        <h4>Nearest Hospital</h4>
+                        <p>2.3 km away</p>
+                    </div>
+                </div>
+                <div class="resource-item">
+                    <i class="fas fa-hotel"></i>
+                    <div>
+                        <h4>NDMA Shelter</h4>
+                        <p>1.1 km away</p>
+                    </div>
+                </div>
+                <div class="resource-item">
+                    <i class="fas fa-gas-pump"></i>
+                    <div>
+                        <h4>Petrol Pump</h4>
+                        <p>0.7 km away</p>
+                    </div>
+                </div>
+                <div class="resource-item">
+                    <i class="fas fa-ambulance"></i>
+                    <div>
+                        <h4>Ambulance Service</h4>
+                        <p>Call 108</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="emergency-numbers">
+            <h2>Important Indian Emergency Numbers</h2>
+            <div class="numbers-grid">
+                <div class="number-item">
+                    <i class="fas fa-police-box"></i>
+                    <h3>Police</h3>
+                    <p>100</p>
+                </div>
+                <div class="number-item">
+                    <i class="fas fa-ambulance"></i>
+                    <h3>Ambulance</h3>
+                    <p>108</p>
+                </div>
+                <div class="number-item">
+                    <i class="fas fa-fire-extinguisher"></i>
+                    <h3>Fire Brigade</h3>
+                    <p>101</p>
+                </div>
+                <div class="number-item">
+                    <i class="fas fa-female"></i>
+                    <h3>Women's Helpline</h3>
+                    <p>1091</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-about">
+                <div class="footer-logo">India<span>Emergency</span></div>
+                <p>Providing critical evacuation information and emergency preparedness resources for citizens across India.</p>
+                <p>An initiative to make India more resilient to disasters.</p>
+            </div>
+            
+            <div class="footer-links">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="about.html"><i class="fas fa-info-circle"></i> About Us</a></li>
+                    <li><a href="resources.html"><i class="fas fa-book"></i> Resources</a></li>
+                    <li><a href="contact.html"><i class="fas fa-phone-alt"></i> Contact</a></li>
+                    <li><a href="faq.html"><i class="fas fa-question-circle"></i> FAQ</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-contact">
+                <h3>Contact Us</h3>
+                <p>
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>National Emergency Response Centre, NDMA Bhawan, New Delhi - 110002</span>
+                </p>
+                <p>
+                    <i class="fas fa-phone-alt"></i>
+                    <span>Helpline: 1078 (Toll Free)</span>
+                </p>
+                <p>
+                    <i class="fas fa-envelope"></i>
+                    <span>info@indiaemergency.gov.in</span>
+                </p>
+                
+                <div class="footer-social">
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2025 National Disaster Management Authority, Government of India. All rights reserved.</p>
+            <p>
+                <a href="privacy.html" style="color: var(--saffron);">Privacy Policy</a> | 
+                <a href="terms.html" style="color: var(--saffron);">Terms of Service</a> | 
+                <a href="sitemap.html" style="color: var(--saffron);">Sitemap</a>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // This would be replaced with actual map implementation
+        document.querySelectorAll('.option-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const locationType = this.querySelector('h3').textContent;
+                alert(`Showing evacuation routes ${locationType}\n\n(In a real implementation, this would display the interactive map with routes)`);
+            });
+        });
+    </script>
+</body>
+</html>
